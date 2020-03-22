@@ -53,8 +53,10 @@ public class MainPanel extends JPanel {
     public MainPanel() {
         initComponents();
         
-        setFocusable(true); 
-        requestFocus();
+       
+//        setFocusable(true); 
+//        requestFocus();
+        
     }
 
 
@@ -200,7 +202,7 @@ public class MainPanel extends JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
          if(running == false){
-            jSlider1.setValue(50);
+            jSlider1.setValue(10);
             thread.interrupt();
             Thread t = new Thread(new Runnable(){
                 @Override
@@ -226,6 +228,7 @@ public class MainPanel extends JPanel {
             });
             t.start();
         }
+        running = true;
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -376,6 +379,9 @@ public class MainPanel extends JPanel {
  
 
     public static void main(String[] args) throws Exception{
+        loadingForm form = new loadingForm();
+         form.setVisible(false);
+        form.dispose();
         frame.getContentPane().invalidate();
         frame.getContentPane().validate();
         frame.getContentPane().repaint();
