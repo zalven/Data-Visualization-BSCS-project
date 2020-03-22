@@ -129,148 +129,158 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
     
     public  int[][] pathFind(int[] pos,int[] tar,int numTar,int numPos,int normal, boolean isSecondPath){
       
-        
-        
-        LinkedList<int[]> list = new LinkedList<>();
-        // Change the player to 1 
-        //int target = board[ tar[0]][ tar[1]];
-        settings.board[ pos[0] ][ pos[1] ] = normal;
-        // Stack the position 
-        list.push(pos);
-        for ( int i = 0 ; i < list.size() ;i++ ){
-            for(int j = 0 ; j < list.size();j++){
-                int x = list.get(j)[0];
-                int y = list.get(j)[1];
-                if(x == tar[0] && y == tar[1] ){
-                    return locator(pos,tar,numTar,numPos,isSecondPath);
-                }
-                
-               
-                if(x > 0){
-                     if( settings.board[x-1][y] == 0 ||  settings.board[x-1][y] == numTar){
-                        settings.board[x-1][y] = settings.board[x][y]+1;
-                        int arr [] = {x-1,y};
-                        list.push(arr);
-                        try { Thread.sleep(speed); } catch (Exception ex) {}
-                        repaint();
-                        
-                     }
-                }
 
-                if(y > 0){
-                    if(settings.board[x][y-1] == 0 || settings.board[x][y-1] == numTar){
-                        settings.board[x][y-1] = settings.board[x][y]+1;
-                        int arr[] = {x,y-1};
-                        list.push(arr);
-                        try { Thread.sleep(speed); } catch (Exception ex) {}
-                        repaint();
-                       
+        try{
+            LinkedList<int[]> list = new LinkedList<>();
+            // Change the player to 1 
+            //int target = board[ tar[0]][ tar[1]];
+            settings.board[ pos[0] ][ pos[1] ] = normal;
+            // Stack the position 
+            list.push(pos);
+            for ( int i = 0 ; i < list.size() ;i++ ){
+                for(int j = 0 ; j < list.size();j++){
+                    int x = list.get(j)[0];
+                    int y = list.get(j)[1];
+                    if(x == tar[0] && y == tar[1] ){
+                        return locator(pos,tar,numTar,numPos,isSecondPath);
                     }
-                }
-                 
-                if(y < settings.board[x].length -1){
-                    if(settings.board[x][y+1] == 0 || settings.board[x][y+1] == numTar){
-                        settings.board[x][y+1] = settings.board[x][y]+1;
-                        int arr[] = {x,y+1};
-                        list.push(arr);
-                        try { Thread.sleep(speed); } catch (Exception ex) {}
-                        repaint();
+
+
+                    if(x > 0){
+                         if( settings.board[x-1][y] == 0 ||  settings.board[x-1][y] == numTar){
+                            settings.board[x-1][y] = settings.board[x][y]+1;
+                            int arr [] = {x-1,y};
+                            list.push(arr);
+                            try { Thread.sleep(speed); } catch (Exception ex) {}
+                            repaint();
+
+                         }
                     }
-                }
-                if(x <settings.board.length -1){
-                    if( settings.board[x+1][y] == 0 ||settings.board[x+1][y] == numTar){
-                        settings.board[x+1][y] = settings.board[x][y]+1;
-                        int arr[] = {x+1,y};
-                        list.push(arr);
-                        try { Thread.sleep(speed); } catch (Exception ex) {}
-                        repaint();
-                      
+
+                    if(y > 0){
+                        if(settings.board[x][y-1] == 0 || settings.board[x][y-1] == numTar){
+                            settings.board[x][y-1] = settings.board[x][y]+1;
+                            int arr[] = {x,y-1};
+                            list.push(arr);
+                            try { Thread.sleep(speed); } catch (Exception ex) {}
+                            repaint();
+
+                        }
+                    }
+
+                    if(y < settings.board[x].length -1){
+                        if(settings.board[x][y+1] == 0 || settings.board[x][y+1] == numTar){
+                            settings.board[x][y+1] = settings.board[x][y]+1;
+                            int arr[] = {x,y+1};
+                            list.push(arr);
+                            try { Thread.sleep(speed); } catch (Exception ex) {}
+                            repaint();
+                        }
+                    }
+                    if(x <settings.board.length -1){
+                        if( settings.board[x+1][y] == 0 ||settings.board[x+1][y] == numTar){
+                            settings.board[x+1][y] = settings.board[x][y]+1;
+                            int arr[] = {x+1,y};
+                            list.push(arr);
+                            try { Thread.sleep(speed); } catch (Exception ex) {}
+                            repaint();
+
+                        }
                     }
                 }
             }
+            return settings.board;
+        }catch(Exception e){
+            running = false;
+            return settings.board;
         }
-        return settings.board;
     }
     
     
     public int[][] locator(int[] pos,int[] tar,int numTar ,int numPos,boolean isSecondPath ){
-     
-        LinkedList<int[]> list = new LinkedList<>();
-        
-        // -3 = path 
-        // -2 = target 
-        // -1 = barrier 
-        // -0 = empty space 
-        // 1  = player
-        // else all pathways
-       // board[pos[0]][pos[1]] = numPos;
-        
-        
-        int targetVal = settings.board[tar[0]][tar[1]];
-        list.push(tar);
-        for(int i = 0 ; i < list.size() ;i++){
-            for(int j = 0 ; j < list.size() ; j++){
-                
-                int x = list.get(j)[0];
-                int y = list.get(j)[1];
-                
-                if(x == pos[0] && y == pos[1]){
-                    settings.board[tar[0]][tar[1]] = numTar ;
-                    settings.board[pos[0]][pos[1]] = numPos;
-                    return settings.board ;
-                }
-                if(x < settings.board.length -1){
-                    if((settings.board[x+1][y] >1 || settings.board[x+1][y] == numTar )&& settings.board[x+1][y] <targetVal ){
-                        targetVal = settings.board[x+1][y];
-                        settings.board[x+1][y] = -3;
-                        int arr[] = {x+1, y};
-                        list.push(arr);
-                        try { Thread.sleep(speed); } catch (Exception ex) {}
-                        repaint();
-                        
+
+        try{
+            LinkedList<int[]> list = new LinkedList<>();
+
+            // -3 = path 
+            // -2 = target 
+            // -1 = barrier 
+            // -0 = empty space 
+            // 1  = player
+            // else all pathways
+           // board[pos[0]][pos[1]] = numPos;
+
+
+            int targetVal = settings.board[tar[0]][tar[1]];
+            list.push(tar);
+            for(int i = 0 ; i < list.size() ;i++){
+                for(int j = 0 ; j < list.size() ; j++){
+
+                    int x = list.get(j)[0];
+                    int y = list.get(j)[1];
+
+                    if(x == pos[0] && y == pos[1]){
+                        settings.board[tar[0]][tar[1]] = numTar ;
+                        settings.board[pos[0]][pos[1]] = numPos;
+                        return settings.board ;
                     }
-                }
-                if(y < settings.board[x].length -1){
-                    if(  ( settings.board[x][y+1] >1 ||settings.board[x][y+1]  == numTar )   && settings.board[x][y+1] < targetVal  ){
-                        targetVal = settings.board[x][y+1];
-                        settings.board[x][y+1] = -3;
-                        int arr[] = {x, y+1};
-                        list.push(arr);
-                        try { Thread.sleep(speed); } catch (Exception ex) {}
-                        repaint();
+                    if(x < settings.board.length -1){
+                        if((settings.board[x+1][y] >1 || settings.board[x+1][y] == numTar )&& settings.board[x+1][y] <targetVal ){
+                            targetVal = settings.board[x+1][y];
+                            settings.board[x+1][y] = -3;
+                            int arr[] = {x+1, y};
+                            list.push(arr);
+                            try { Thread.sleep(speed); } catch (Exception ex) {}
+                            repaint();
+
+                        }
                     }
-                }
-                if(x > 0){
-                    if(  ( settings.board [x-1][y] > 1 || settings.board[x-1][y] == numTar) &&  settings.board[x-1][y]< targetVal  ){
-                        targetVal =settings.board[x-1][y];
-                        settings.board[x-1][y] = -3;
-                        int arr[] = {x-1,y};
-                        list.push(arr);
-                        try { Thread.sleep(speed); } catch (Exception ex) {}
-                        repaint();
+                    if(y < settings.board[x].length -1){
+                        if(  ( settings.board[x][y+1] >1 ||settings.board[x][y+1]  == numTar )   && settings.board[x][y+1] < targetVal  ){
+                            targetVal = settings.board[x][y+1];
+                            settings.board[x][y+1] = -3;
+                            int arr[] = {x, y+1};
+                            list.push(arr);
+                            try { Thread.sleep(speed); } catch (Exception ex) {}
+                            repaint();
+                        }
                     }
-                }
-                
-                if(y > 0){
-                    if(  (settings.board[x][y-1] >1|| settings.board[x][y-1] == numTar ) && settings.board[x][y-1]< targetVal ){
-                        targetVal = settings.board[x][y-1];
-                        settings.board[x][y-1] = -3;
-                        int arr[] = {x,y-1};
-                        list.push(arr);
-                        try { Thread.sleep(speed); } catch (Exception ex) {}
-                        
+                    if(x > 0){
+                        if(  ( settings.board [x-1][y] > 1 || settings.board[x-1][y] == numTar) &&  settings.board[x-1][y]< targetVal  ){
+                            targetVal =settings.board[x-1][y];
+                            settings.board[x-1][y] = -3;
+                            int arr[] = {x-1,y};
+                            list.push(arr);
+                            try { Thread.sleep(speed); } catch (Exception ex) {}
+                            repaint();
+                        }
+                    }
+
+                    if(y > 0){
+                        if(  (settings.board[x][y-1] >1|| settings.board[x][y-1] == numTar ) && settings.board[x][y-1]< targetVal ){
+                            targetVal = settings.board[x][y-1];
+                            settings.board[x][y-1] = -3;
+                            int arr[] = {x,y-1};
+                            list.push(arr);
+                            try { Thread.sleep(speed); } catch (Exception ex) {}
+
+                        }
                     }
                 }
             }
-        }
-        orangeVal = settings.board[tar[0]][tar[1]];
-        settings.board[tar[0]][tar[1]] = numTar;
-        settings.board[pos[0]][pos[1]] = numPos;
-        try { Thread.sleep(speed); } catch (Exception ex) {}
-        repaint();
+            orangeVal = settings.board[tar[0]][tar[1]];
+            settings.board[tar[0]][tar[1]] = numTar;
+            settings.board[pos[0]][pos[1]] = numPos;
+            try { Thread.sleep(speed); } catch (Exception ex) {}
+            repaint();
+                running = false;
+            return settings.board;
+        }catch(Exception e){
             running = false;
-        return settings.board;
+            return settings.board;
+        }
     }
+    
              
      public  int[][] process( int[] position,int[] target,int[] point){
         
@@ -753,6 +763,7 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
         jPanel1.add(jButton1);
         jButton1.setBounds(20, 20, 90, 50);
 
+        jSlider1.setMinimum(5);
         jSlider1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 jSlider1MouseDragged(evt);
