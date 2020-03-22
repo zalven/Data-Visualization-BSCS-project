@@ -26,7 +26,6 @@ public class Properties {
                             ArraySize = 200;        // ArraySize in sorting
             
    public static int[][] 
-                   
            COLORS = {
                     /*[0]*/        {21, 32, 43},       // BACKGROUND 1     
                     /*[1]*/        {37, 51, 65},       // BACKGROUND 2 
@@ -41,9 +40,7 @@ public class Properties {
                     /*[10]*/       {27, 40, 50}        // BLACK Selection
                 
            };
-   
    public static boolean 
-                    
                         running = false,        // initial Start
                         maximized = true,       // Starts at full screen
                         resizezable = false;    // Resizeable screen 

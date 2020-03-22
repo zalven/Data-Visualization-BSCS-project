@@ -192,84 +192,102 @@ public class MainPanel extends JPanel {
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/t1.png"))); // NOI18N
         jLabel2.setText("jLabel2");
         jPanel2.add(jLabel2);
-        jLabel2.setBounds(8, -5, 1360, 50);
+        jLabel2.setBounds(10, 0, 1360, 40);
 
         add(jPanel2);
-        jPanel2.setBounds(-10, 700, 1370, 40);
+        jPanel2.setBounds(-10, 710, 1370, 40);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        jSlider1.setValue(50);
-        thread.interrupt();
-        Thread t = new Thread(new Runnable(){
-            @Override
-            public void run() {
-               //speed = jSlider1.getValue();
-                randomizer();
-            }
-        });
-        t.start();
+         if(running == false){
+            jSlider1.setValue(50);
+            thread.interrupt();
+            Thread t = new Thread(new Runnable(){
+                @Override
+                public void run() {
+                   //speed = jSlider1.getValue();
+                    randomizer();
+                }
+            });
+            t.start();
+         }
+         running = true;
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-      
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/1.png"))); 
-        Thread t = new Thread(new Runnable(){
-            @Override
-            public void run() {
-                speed = jSlider1.getValue();
-                bubbleSort();
-            }
-        });
-        t.start();
+        if(running == false){
+            jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/1.png"))); 
+            Thread t = new Thread(new Runnable(){
+                @Override
+                public void run() {
+                    speed = jSlider1.getValue();
+                    bubbleSort();
+                }
+            });
+            t.start();
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/3.png"))); 
-        Thread t = new Thread(new Runnable(){
-            @Override
-            public void run() {
-                speed = jSlider1.getValue();
-               insertionSort();
+        
+            if(running == false){ 
+                jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/3.png"))); 
+                Thread t = new Thread(new Runnable(){
+                    @Override
+                    public void run() {
+                        speed = jSlider1.getValue();
+                       insertionSort();
+                    }
+                });
+                t.start();
             }
-        });
-        t.start();
+            running = true;
+        
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/2.png"))); 
-        Thread t = new Thread(new Runnable(){
-            @Override
-            public void run() {
-                speed = jSlider1.getValue();
-               selectionSort();
-            }
-        });
-        t.start();
+       if(running == false){
+            jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/2.png"))); 
+            Thread t = new Thread(new Runnable(){
+                @Override
+                public void run() {
+                    speed = jSlider1.getValue();
+                   selectionSort();
+                }
+            });
+            t.start();
+       }
+       running = true;
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/4.png"))); 
-        Thread t = new Thread(new Runnable(){
-            @Override
-            public void run() {
-                speed = jSlider1.getValue();
-               mergeSort();
-            }
-        });
-        t.start();
+        if(running == false){
+            jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/4.png"))); 
+            Thread t = new Thread(new Runnable(){
+                @Override
+                public void run() {
+                    speed = jSlider1.getValue();
+                   mergeSort();
+                }
+            });
+            t.start();
+        }
+        running = true;
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/5.png"))); 
-        Thread t = new Thread(new Runnable(){
-            @Override
-            public void run() {
-                speed = jSlider1.getValue();
-               quickSort();
-            }
-        });
-        t.start();
+        if(running == false) {
+            jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/5.png"))); 
+            Thread t = new Thread(new Runnable(){
+                @Override
+                public void run() {
+                    speed = jSlider1.getValue();
+                   quickSort();
+                }
+            });
+            t.start();
+        }
+        running = true;
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jSlider1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jSlider1PropertyChange
@@ -284,18 +302,23 @@ public class MainPanel extends JPanel {
     }//GEN-LAST:event_jSlider1MouseDragged
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-  
-     
-      PathFinderInterface panel = new PathFinderInterface();
-      // panel.setVisible(true);
-      frame.getContentPane().invalidate();
-        frame.getContentPane().validate();
-        frame.getContentPane().repaint();
-         frame.getContentPane().removeAll();
-       frame.add(panel);
-       
-       frame.setVisible(true);
     
+    if(running == false){
+        PathFinderInterface panel = new PathFinderInterface();
+        // panel.setVisible(true);
+        
+            settings.board =  new int[ settings.ROWS][settings.COLUMNS];
+            frame.getContentPane().removeAll();
+         
+            // refresh the panel.
+           
+           
+            
+            frame.add(panel);
+            frame.setVisible(true);
+            
+    }
+
       
      
     }//GEN-LAST:event_jButton7ActionPerformed
@@ -315,7 +338,7 @@ public class MainPanel extends JPanel {
     private static MainPanel n = new MainPanel();
     private static int pick = 0;
     private static Thread thread = new Thread();
-    
+    private static boolean running = false;
  //    public void paintComponent(Graphics g){
 //        super.paintComponent(g);
 //        draw(g);
@@ -431,6 +454,7 @@ public class MainPanel extends JPanel {
             z = i-3;
             try { Thread.sleep(speed); } catch (Exception ex) {}
             n.repaint();}
+         running = false;
     }
     
     public  void randomizer(){
@@ -467,6 +491,7 @@ public class MainPanel extends JPanel {
        y = 0;
        w= 0 ;
        z = 0;
+       running = false;
        
        
     }
@@ -482,6 +507,7 @@ public class MainPanel extends JPanel {
             z = i-3;
             try { Thread.sleep(speed); } catch (Exception ex) {}
             n.repaint();}
+         running = false;
     }
      public void _sort(int arr[], int left, int right) { 
           thread.run();
@@ -582,6 +608,7 @@ public class MainPanel extends JPanel {
             z = i-3;
             try { Thread.sleep(speed); } catch (Exception ex) {}
             n.repaint();}
+        running = false;
     }
     public   void  _quickSort(int[] data,int min,int max){
          thread.run();
@@ -651,6 +678,7 @@ public class MainPanel extends JPanel {
             z = i-3;
             try { Thread.sleep(speed); } catch (Exception ex) {}
             n.repaint();}
+         running = false;
      
     
     }
@@ -687,6 +715,7 @@ public class MainPanel extends JPanel {
             z = i-3;
             try { Thread.sleep(speed); } catch (Exception ex) {}
             n.repaint();}
+        running = false;
   
     }
     

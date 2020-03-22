@@ -55,15 +55,20 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
     public PathFinderInterface() {
         initComponents();
 
-        setLayout(null);
-        addKeyListener(this);
-        setFocusable(true);
-        setFocusTraversalKeysEnabled(false);
+//        setLayout(null);
+//        addKeyListener(this);
+//        setFocusable(true);
+//        setFocusTraversalKeysEnabled(false);
             
        int[] rgbs = settings.COLORS[0];
        int reds = rgbs[0] ,greens = rgbs[1],blues = rgbs[2];
-       setBackground(new Color(reds,greens,blues));  
-       
+        setBackground(new Color(reds,greens,blues));  
+        settings.board =  new int[ settings.ROWS][settings.COLUMNS];
+        position = null;
+        target = null;
+        points = null;
+        running = false;
+        System.out.println("reset");
        
        
        JLabel lab1 = new JLabel("RESET");
@@ -131,6 +136,8 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
       
 
         try{
+            Thread t = new Thread();
+            t.start();
             LinkedList<int[]> list = new LinkedList<>();
             // Change the player to 1 
             //int target = board[ tar[0]][ tar[1]];
@@ -189,6 +196,7 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
                     }
                 }
             }
+            running = false;
             return settings.board;
         }catch(Exception e){
             running = false;
@@ -200,6 +208,8 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
     public int[][] locator(int[] pos,int[] tar,int numTar ,int numPos,boolean isSecondPath ){
 
         try{
+            Thread t = new Thread();
+            t.start();
             LinkedList<int[]> list = new LinkedList<>();
 
             // -3 = path 
@@ -285,6 +295,8 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
      public  int[][] process( int[] position,int[] target,int[] point){
         
          try{
+             Thread t = new Thread();
+            t.start();
              for(int i = 0 ; i < settings.board.length ; i ++)
                  for(int j = 0 ; j < settings.board[i].length ; j++)
                      if(settings.board[i][j] > 1 || settings.board[i][j] == -3 || settings.board[i][j] == -5 )
@@ -331,7 +343,8 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
              Thread t = new Thread(new Runnable(){
                     @Override
                     public void run() {
-                        pathFind(point,target,-2,-4,1,true); // OrangeToRed
+                        pathFind1(point,target,-2,-4,1,true); // OrangeToRed
+                        running = false;
                         
                     }
                 });
@@ -371,6 +384,8 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
     public int[][] pathFind1(int[] pos,int[] tar,int numTar,int numPos,int normal,boolean isSecondPath){
    
         try{
+            Thread t = new Thread();
+            t.start();
             LinkedList<int[]> list = new LinkedList<>();
         // Change the player to 1 
         //int target = board[ tar[0]][ tar[1]];
@@ -432,6 +447,7 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
                 }
             }
         }
+        running = false;
         return settings.board;
         }catch(Exception e){
             running = false;
@@ -443,89 +459,90 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
     
     public int[][] locator1(int[] pos,int[] tar,int numTar ,int numPos,boolean isSecondPath ){
        
-        
-        
-        LinkedList<int[]> list = new LinkedList<>();
-        
-        // -3 = path 
-        // -2 = target 
-        // -1 = barrier 
-        // -0 = empty space 
-        // 1  = player
-        // else all pathways
-        
-        
-       // board[pos[0]][pos[1]] = numPos;
-        
-        
-        int targetVal = settings.board[tar[0]][tar[1]];
-        
+        try{
+            Thread t = new Thread();
+            t.start();
 
-        
-        list.push(tar);
-        for(int i = 0 ; i < list.size() ;i++){
-            for(int j = 0 ; j < list.size() ; j++){
-                int x = list.get(j)[0];
-                int y = list.get(j)[1];
-                
-                
-                if(x == pos[0] && y == pos[1]){
-                    settings.board[tar[0]][tar[1]] = numTar ;
-                    settings.board[pos[0]][pos[1]] = numPos;
-                    return settings.board ;
-                    
-                }
-                if(x < settings.board.length -1){
-                    if((settings.board[x+1][y] >1 ||settings.board[x+1][y] == numTar )&& settings.board[x+1][y] <targetVal ){
-                        targetVal =settings.board[x+1][y];
-                        settings.board[x+1][y] = -5;
-                        int arr[] = {x+1, y};
-                        list.push(arr);
-                         try { Thread.sleep(speed); } catch (Exception ex) {}
-                        repaint();
-                        
+            LinkedList<int[]> list = new LinkedList<>();
+
+            // -3 = path 
+            // -2 = target 
+            // -1 = barrier 
+            // -0 = empty space 
+            // 1  = player
+            // else all pathways
+
+           // board[pos[0]][pos[1]] = numPos;
+
+            int targetVal = settings.board[tar[0]][tar[1]];
+            list.push(tar);
+            for(int i = 0 ; i < list.size() ;i++){
+                for(int j = 0 ; j < list.size() ; j++){
+                    int x = list.get(j)[0];
+                    int y = list.get(j)[1];
+
+
+                    if(x == pos[0] && y == pos[1]){
+                        settings.board[tar[0]][tar[1]] = numTar ;
+                        settings.board[pos[0]][pos[1]] = numPos;
+                        return settings.board ;
+
                     }
-                }
-                if(y <settings.board[x].length -1){
-                    if(  (settings.board[x][y+1] >1 ||settings.board[x][y+1]  == numTar )   && settings.board[x][y+1] < targetVal  ){
-                        targetVal = settings.board[x][y+1];
-                        settings.board[x][y+1] = -5;
-                        int arr[] = {x, y+1};
-                        list.push(arr); 
-                        try { Thread.sleep(speed); } catch (Exception ex) {}
-                        repaint();
+                    if(x < settings.board.length -1){
+                        if((settings.board[x+1][y] >1 ||settings.board[x+1][y] == numTar )&& settings.board[x+1][y] <targetVal ){
+                            targetVal =settings.board[x+1][y];
+                            settings.board[x+1][y] = -5;
+                            int arr[] = {x+1, y};
+                            list.push(arr);
+                             try { Thread.sleep(speed); } catch (Exception ex) {}
+                            repaint();
+
+                        }
                     }
-                }
-                if(x > 0){
-                    if(  ( settings.board [x-1][y] > 1 || settings.board[x-1][y] == numTar) && settings.board[x-1][y]< targetVal  ){
-                        targetVal = settings.board[x-1][y];
-                        settings.board[x-1][y] = -5;
-                        int arr[] = {x-1,y};
-                        list.push(arr);
-                        try { Thread.sleep(speed); } catch (Exception ex) {}
-                        repaint();
+                    if(y <settings.board[x].length -1){
+                        if(  (settings.board[x][y+1] >1 ||settings.board[x][y+1]  == numTar )   && settings.board[x][y+1] < targetVal  ){
+                            targetVal = settings.board[x][y+1];
+                            settings.board[x][y+1] = -5;
+                            int arr[] = {x, y+1};
+                            list.push(arr); 
+                            try { Thread.sleep(speed); } catch (Exception ex) {}
+                            repaint();
+                        }
                     }
-                }
-                
-                if(y > 0){
-                    if(  (settings.board[x][y-1] >1|| settings.board[x][y-1] == numTar ) &&  settings.board[x][y-1]< targetVal ){
-                        targetVal = settings.board[x][y-1];
-                        settings.board[x][y-1] = -5;
-                        int arr[] = {x,y-1};
-                        list.push(arr);
-                        try { Thread.sleep(speed); } catch (Exception ex) {}
-                        repaint();
-                        
+                    if(x > 0){
+                        if(  ( settings.board [x-1][y] > 1 || settings.board[x-1][y] == numTar) && settings.board[x-1][y]< targetVal  ){
+                            targetVal = settings.board[x-1][y];
+                            settings.board[x-1][y] = -5;
+                            int arr[] = {x-1,y};
+                            list.push(arr);
+                            try { Thread.sleep(speed); } catch (Exception ex) {}
+                            repaint();
+                        }
                     }
+
+                    if(y > 0){
+                        if(  (settings.board[x][y-1] >1|| settings.board[x][y-1] == numTar ) &&  settings.board[x][y-1]< targetVal ){
+                            targetVal = settings.board[x][y-1];
+                            settings.board[x][y-1] = -5;
+                            int arr[] = {x,y-1};
+                            list.push(arr);
+                            try { Thread.sleep(speed); } catch (Exception ex) {}
+                            repaint();
+
+                        }
+                    }
+
                 }
-              
             }
+            orangeVal = settings.board[tar[0]][tar[1]];
+            settings.board[tar[0]][tar[1]] = numTar;
+            settings.board[pos[0]][pos[1]] = numPos;
+            //running = false;
+            return settings.board;
+        }catch(Exception e){
+            running = false;
+            return settings.board;
         }
-        orangeVal = settings.board[tar[0]][tar[1]];
-        settings.board[tar[0]][tar[1]] = numTar;
-        settings.board[pos[0]][pos[1]] = numPos;
-
-        return settings.board;
     }
 
        public void paint(Graphics g){
@@ -723,7 +740,6 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
                 }
         return false;
     }
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -733,6 +749,7 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jSlider1 = new javax.swing.JSlider();
+        jLabel1 = new javax.swing.JLabel();
 
         setLayout(null);
 
@@ -754,14 +771,16 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
 
         jPanel1.setLayout(null);
 
-        jButton1.setText("jButton1");
+        jButton1.setBorderPainted(false);
+        jButton1.setContentAreaFilled(false);
+        jButton1.setFocusPainted(false);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
         jPanel1.add(jButton1);
-        jButton1.setBounds(20, 20, 90, 50);
+        jButton1.setBounds(50, 20, 130, 30);
 
         jSlider1.setMinimum(5);
         jSlider1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -770,19 +789,31 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
             }
         });
         jPanel1.add(jSlider1);
-        jSlider1.setBounds(120, 20, 380, 26);
+        jSlider1.setBounds(190, 30, 320, 10);
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/close.png"))); // NOI18N
+        jLabel1.setText("jLabel1");
+        jPanel1.add(jLabel1);
+        jLabel1.setBounds(0, -20, 540, 110);
 
         add(jPanel1);
-        jPanel1.setBounds(590, 630, 530, 70);
+        jPanel1.setBounds(810, 630, 530, 70);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         if(running == false){
+            removeAll();
+            removeAll();
+            updateUI();
+            timer.stop();
+            
             settings.board =  new int[ settings.ROWS][settings.COLUMNS];
             position = null;
             target = null;
             points = null;
             running = false;
+            
+            
             MainPanel panel = new MainPanel();
             panel.setVisible(true);
 
@@ -801,12 +832,11 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
         }
         running = true;
         
-        
-         
     }//GEN-LAST:event_jButton1ActionPerformed
     public void animation(){
         
-     
+        Thread t = new Thread();
+        t.start();
         for(int i = 0 ; i < settings.board.length ; i ++)
            for(int j = 0 ; j < settings.board[i].length ; j++)
                if(settings.board[i][j] > 1 || settings.board[i][j] == -3 || settings.board[i][j] == -5 )
@@ -825,6 +855,7 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton7;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSlider jSlider1;
@@ -861,6 +892,7 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
         //System.out.println(running);
        //settings.board = PathFinderAlgo.process(settings.board,position,target,points); 
        if (running == false){
+            jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/close.png")));
             settings.board = PathFinderAlgo.process(settings.board,position,target,points); 
 
                         // -4 =POINTS 
@@ -1062,7 +1094,9 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
                 }
 
             });
-         }
+         }else{
+           jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/open.png")));
+       }
          
     } 
        
