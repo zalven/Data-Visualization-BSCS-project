@@ -129,8 +129,6 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
         timer = new Timer((int)settings.DELAY,this);
         timer.start();
         
-        
-        
         if(running == false){
         
         

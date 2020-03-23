@@ -209,9 +209,6 @@ public class PathFind extends JPanel implements KeyListener,ActionListener{
                                 settings.SIZE*2+10, settings.SIZE+10);
         }
         
-        
-        
-        
         if(pick == -1){
             g.setColor(new Color(redx,greenx,bluex));
             g.fillRect( settings.SIZE*16-5+settings.GAP*16 ,
@@ -219,10 +216,7 @@ public class PathFind extends JPanel implements KeyListener,ActionListener{
                                 settings.SIZE*2+10, settings.SIZE+10);
         
         }
-        
-        
          // ===================================================================================================
-        
         
         
         int rgb[] = settings.COLORS[9];
@@ -264,11 +258,7 @@ public class PathFind extends JPanel implements KeyListener,ActionListener{
         g.fillRect( settings.SIZE*16+settings.GAP*16 ,
                             settings.SIZE*(settings.ROWS+1)+settings.GAP*(settings.ROWS+1),
                             settings.SIZE*2, settings.SIZE);
-        
-        
-        
         // Mouse 
-        
         
                 if(pick == 0) change=8;
                 if(pick  == -1) change=2;

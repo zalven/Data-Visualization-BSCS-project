@@ -39,14 +39,14 @@ public class Properties {
    public static boolean 
                         running = false,        // initial Start
                         maximized = true,       // Starts at full screen
-                        resizezable = false;    // Resizeable screen 
+                        resizezable = true;    // Resizeable screen 
    
     /**
      *
      */
    
-     public static int[][] painBoard = new int[paintWidth ][paintHeight]; 
-    
+    public static int[][] painBoard = new int[paintWidth ][paintHeight]; 
+
         // -5 = path 2 
         // -4 = CHECK POINTS 
         // -3 = path 1 

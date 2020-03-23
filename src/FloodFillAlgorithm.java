@@ -1,5 +1,6 @@
 
 import DesignPackage.Properties;
+import LinkedList.LinkedList;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -9,6 +10,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -22,24 +25,49 @@ public class FloodFillAlgorithm extends javax.swing.JPanel implements KeyListene
     private Timer timer;
     private int mouseX = 0 , mouseY =  0;
     private boolean isPencil = true;
-    
+    private boolean isRunning = false;
+    private Thread thread = new Thread();
+   
     public FloodFillAlgorithm() {
+        
         initComponents();
         int rgb[] = prop.COLORS[0];
         setBackground(new Color(  rgb[0],rgb[1],rgb[2] ) );
         timer = new Timer((int)prop.DELAY,this);
         timer.start();
+        speed = jSlider2.getValue();
         
         for(int i = 0 ; i < prop.paintWidth ;i++)
             for(int j = 0 ; j <prop.paintHeight ; j++)
                 prop.painBoard[i][j] = 1;
         
-        
-        
-        
- 
-        
-        
+     
+        addMouseListener(new MouseAdapter(){
+                 @Override
+                 public void mouseClicked(MouseEvent e) {
+                        if(isPencil == false){
+                            if(isRunning == false){
+                                mouseX = e.getX();
+                                mouseY  = e.getY();
+                                int x =e.getX() /6;
+                                int y = e.getY() /6;
+                                if(x >= 0 && x < prop.painBoard.length && y >=0 && 7 < prop.painBoard[0].length){
+                                Thread t= new Thread(new Runnable(){
+                                    @Override public void run() {
+                                        int x =e.getX() /6;
+                                        int y = e.getY() /6;
+                                        getValue = new int[]{x,y};
+                                        fill();
+                                }});
+                                 t.start();
+                                 isRunning = true; 
+                            }
+                        } 
+                        
+                    }
+                }
+        });
+                 
         
         
         
@@ -59,19 +87,38 @@ public class FloodFillAlgorithm extends javax.swing.JPanel implements KeyListene
                 }
                 @Override
                 public void  mouseDragged(MouseEvent e) {
-                    mouseX = e.getX();
-                    mouseY  = e.getY();
-                    int x =e.getX() /6;
-                    int y = e.getY() /6;
-                    int sld = jSlider1.getValue();
-                    if(x>=sld-1 && x< prop.paintWidth-sld+1 && y>=sld-1 && y< prop.paintHeight-sld+1){
-                        	for(int i = -jSlider1.getValue()+1 ; i < jSlider1.getValue(); i ++)
-                                    for(int j = -sld+1 ; j < sld ; j++)
-                                        prop.painBoard[x+i][y+j] = COLOR;
+                    if(isPencil == true){
+                        mouseX = e.getX();
+                        mouseY  = e.getY();
+                        int x =e.getX() /6;
+                        int y = e.getY() /6;
+                        int sld = jSlider1.getValue();
+                        if(x>=sld-1 && x< prop.paintWidth-sld+1 && y>=sld-1 && y< prop.paintHeight-sld+1 && isRunning == false){
+                                    for(int i = -jSlider1.getValue()+1 ; i < jSlider1.getValue(); i ++)
+                                        for(int j = -sld+1 ; j < sld ; j++)
+                                            prop.painBoard[x+i][y+j] = COLOR;
+                        }
+                        repaint();
+                    }else{
+                        if(isRunning == false){
+                            mouseX = e.getX();
+                            mouseY  = e.getY();
+                            int x =e.getX() /6;
+                            int y = e.getY() /6;
+                            if(x >= 0 && x < prop.painBoard.length && y >=0 && 7 < prop.painBoard[0].length){
+                           Thread t= new Thread(new Runnable(){@Override public void run() {
+                                    int x =e.getX() /6;
+                                    int y = e.getY() /6;
+                                    getValue = new int[]{x,y};
+                                    fill();
+                                }});
+                           t.start();
+                            isRunning = true;
+                        };
+                        }
                     }
-                    repaint();
                 }
-        });
+            });
         //====================================== MOUSE MOVEMENT CONTROLLER ================================================
         
     }
@@ -79,12 +126,10 @@ public class FloodFillAlgorithm extends javax.swing.JPanel implements KeyListene
     
     
     public void paint(Graphics g){
-        super.paint(g);
         
-    
+        super.paint(g);
         for(int col = 0 ;  col < prop.painBoard.length ; col++  ){
             for(int row = 0 ; row < prop.painBoard[col].length ; row++ ){
-               
                 int rgb[] = prop.COLORS[prop.painBoard[col][row]];
                 int red = rgb[0], green = rgb[1] , blue = rgb[2];
                 g.setColor(new Color(red,green,blue)); 
@@ -93,11 +138,38 @@ public class FloodFillAlgorithm extends javax.swing.JPanel implements KeyListene
         }   
         
         if(COLOR>=0 && COLOR <= 10 ){
-            int rgb[] = prop.COLORS[COLOR];
-            int red = rgb[0], green = rgb[1] , blue = rgb[2];
-            int sld = jSlider1.getValue()+1;
-            g.setColor(new Color(red,green,blue)); 
-            g.fillRect( mouseX     ,   mouseY,  5*sld,5*sld);
+           
+            if(isPencil == true){
+                int rgb[] = prop.COLORS[COLOR];
+                int red = rgb[0], green = rgb[1] , blue = rgb[2];
+                int sld = jSlider1.getValue()+1;
+                g.setColor(new Color(red,green,blue)); 
+                g.fillRect( mouseX     ,   mouseY,  5*sld,5*sld);
+            }else{
+                int rgb[] = prop.COLORS[8];
+                int red = rgb[0], green = rgb[1] , blue = rgb[2];
+                g.setColor(new Color(red,green,blue)); 
+                g.fillRect( mouseX- 5*2     ,   mouseY+ 5*2,  5*4,5*4);
+                
+                
+                
+                int rgb2[] = prop.COLORS[9];
+                int red2 = rgb2[0], green2 = rgb2[1] , blue2 = rgb2[2];
+                g.setColor(new Color(red,green,blue)); 
+                g.fillRect( mouseX- 5     ,   mouseY+ 5,  5*2,5*2);
+                
+                int rgb3[] = prop.COLORS[COLOR];
+                int red3 = rgb3[0], green3 = rgb3[1] , blue3 = rgb3[2];
+                g.setColor(new Color(red3,green3,blue3)); 
+                g.fillRect( mouseX- 5*2     ,   mouseY- 5*2,  5,5*3);
+                
+                
+                
+                int rgb1[] = prop.COLORS[COLOR];
+                int red1 = rgb1[0], green1 = rgb1[1] , blue1 = rgb1[2];
+                g.setColor(new Color(red1,green1,blue1)); 
+                g.fillRect( mouseX     ,   mouseY,  5*2,5*2);
+            }
              
         }
     }
@@ -125,8 +197,11 @@ public class FloodFillAlgorithm extends javax.swing.JPanel implements KeyListene
         jButton13 = new javax.swing.JButton();
         jButton14 = new javax.swing.JButton();
         jSlider1 = new javax.swing.JSlider();
+        jButton15 = new javax.swing.JButton();
+        jButton16 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jSlider2 = new javax.swing.JSlider();
 
         setLayout(null);
 
@@ -310,6 +385,28 @@ public class FloodFillAlgorithm extends javax.swing.JPanel implements KeyListene
         jPanel1.add(jSlider1);
         jSlider1.setBounds(70, 400, 110, 30);
 
+        jButton15.setBorderPainted(false);
+        jButton15.setContentAreaFilled(false);
+        jButton15.setFocusPainted(false);
+        jButton15.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton15ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton15);
+        jButton15.setBounds(0, 160, 32, 30);
+
+        jButton16.setBorderPainted(false);
+        jButton16.setContentAreaFilled(false);
+        jButton16.setFocusPainted(false);
+        jButton16.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton16ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton16);
+        jButton16.setBounds(0, 200, 32, 40);
+
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/paint.png"))); // NOI18N
         jLabel1.setText("jLabel1");
         jPanel1.add(jLabel1);
@@ -322,97 +419,240 @@ public class FloodFillAlgorithm extends javax.swing.JPanel implements KeyListene
         jLabel2.setText("jLabel2");
         add(jLabel2);
         jLabel2.setBounds(0, 710, 1360, 40);
+
+        jSlider2.setMaximum(10);
+        jSlider2.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jSlider2MouseDragged(evt);
+            }
+        });
+        add(jSlider2);
+        jSlider2.setBounds(1140, 690, 220, 20);
     }// </editor-fold>//GEN-END:initComponents
     
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-             timer.stop();
-        PathFinderInterface panel = new PathFinderInterface();
-         MainPanel main = new MainPanel();
-        // panel.setVisible(true);
-        
-            prop.board =  new int[ prop.ROWS][prop.COLUMNS];
-            
-           main. frame.getContentPane().removeAll();
-         
-            // refresh the panel.
-           
-           
-            
-             main.frame.add(panel);
-             main.frame.setVisible(true);
-             ImageIcon img = new ImageIcon("src\\DSicon.png");
-             main.frame.setIconImage(img.getImage());
+             if(isRunning == false){
+             
+                 timer.stop();
+                PathFinderInterface panel = new PathFinderInterface();
+                MainPanel main = new MainPanel();
+                for(int i = 0 ; i < prop.paintWidth ;i++)
+                for(int j = 0 ; j <prop.paintHeight ; j++)
+                    prop.painBoard[i][j] = 1;
+            // panel.setVisible(true);
+
+                prop.board =  new int[ prop.ROWS][prop.COLUMNS];
+
+               main. frame.getContentPane().removeAll();
+
+                // refresh the panel.
+
+
+
+                 main.frame.add(panel);
+                 main.frame.setVisible(true);
+                 ImageIcon img = new ImageIcon("src\\DSicon.png");
+                 main.frame.setIconImage(img.getImage());
+             }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-            removeAll();
-            removeAll();
-            updateUI();
-            MainPanel panel = new MainPanel();
-            panel.setVisible(true);
-            timer.stop();
-            try {
-                panel.main(new String[]{});
-            } catch (Exception ex) {
-                Logger.getLogger(PathFinderInterface.class.getName()).log(Level.SEVERE, null, ex);
+            if(isRunning == false){
+                removeAll();
+                removeAll();
+                updateUI();
+                MainPanel panel = new MainPanel();
+                panel.setVisible(true);
+                timer.stop();
+                for(int i = 0 ; i < prop.paintWidth ;i++)
+                for(int j = 0 ; j <prop.paintHeight ; j++)
+                    prop.painBoard[i][j] = 1;
+                try {
+                    panel.main(new String[]{});
+                } catch (Exception ex) {
+                    Logger.getLogger(PathFinderInterface.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
             // TODO add your handling code here:
-        COLOR = 2;
+       if(isRunning == false){
+       
+            COLOR = 2;
+        changePanelColor();
+       }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-       COLOR = 3;
+       if(isRunning == false){
+           COLOR = 3;
+        changePanelColor();
+       }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-       COLOR = 4;
+       if(isRunning == false){
+           COLOR = 4;
+        changePanelColor();
+       }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-       COLOR = 5;
+      if(isRunning == false){
+           COLOR = 5;
+        changePanelColor();
+      }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-      COLOR = 6;
+      if(isRunning == false){
+          COLOR = 6;
+       changePanelColor();
+      }
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        COLOR = 7;
-        
+        if(isRunning == false){
+            COLOR = 7;
+         changePanelColor();
+        }
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-       COLOR = 8;
+      if(isRunning == false){
+      
+           COLOR = 8;
+        changePanelColor();
+      }
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
         // TODO add your handling code here:
-         COLOR = 9;
+         if(isRunning == false){
+             COLOR = 9;
+          changePanelColor();
+         }
     }//GEN-LAST:event_jButton10ActionPerformed
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
-        COLOR = 1;        // TODO add your handling code here:
+        
+        if(isRunning == false){COLOR = 1;   
+         changePanelColor();}// TODO add your handling code here:}
     }//GEN-LAST:event_jButton11ActionPerformed
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
         // TODO add your handling code here:
-        COLOR = 0;
+        if(isRunning == false){COLOR = 0;
+         changePanelColor();}
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
-        for(int i = 0 ; i < prop.paintWidth ;i++)
+        if(isRunning == false){
+            for(int i = 0 ; i < prop.paintWidth ;i++)
             for(int j = 0 ; j <prop.paintHeight ; j++)
                 prop.painBoard[i][j] = 1;
+        }
     }//GEN-LAST:event_jButton13ActionPerformed
 
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
-        COLOR = 1;
+        if(isRunning == false){COLOR = 1;  changePanelColor();}
     }//GEN-LAST:event_jButton14ActionPerformed
 
+    private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
+        if(isRunning == false){isPencil = true;}
+    }//GEN-LAST:event_jButton15ActionPerformed
+
+    private void jButton16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton16ActionPerformed
+        if(isRunning == false){isPencil = false;}
+    }//GEN-LAST:event_jButton16ActionPerformed
+
+    private void jSlider2MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jSlider2MouseDragged
+        speed = jSlider2.getValue();
+    }//GEN-LAST:event_jSlider2MouseDragged
+
     
+    private  int getValue[];
+    private int speed = 0;
+    public void fill(){
+        
+      try{
+          if( prop.painBoard[ getValue[0]][getValue[1]] == COLOR){
+              isRunning = false;
+          }
+          else if(getValue!= null && isPencil == false && prop.painBoard[ getValue[0]][getValue[1]] != COLOR){
+                  Thread t = new Thread();
+                  t.start();
+                  ArrayList<int[]> list = new ArrayList<int[]>();
+                  list.add(getValue);
+                  int changedValue =  prop.painBoard[ getValue[0]][ getValue[1]];
+                  prop.painBoard[ getValue[0]][ getValue[1]] = COLOR;
+
+                  // for(int j = 0 ; j <  list.size() ; j++)
+                   for(int i = 0 ;  i < list.size() ; i++){
+                       speed = jSlider2.getValue();
+                       int x = list.get(i)[0];
+                       int y  = list.get(i)[1];
+                       if( x > 0){
+                           if(  prop.painBoard[x-1][y]  == changedValue  ){
+                                prop.painBoard[x-1][y] = COLOR;
+                               list.add( new int[]{x-1,y});
+                                if(speed != 0){
+                                    try { Thread.sleep(speed); } catch (Exception ex) {}
+                                    repaint();
+                                }
+                           }
+                       }
+
+                       if(x <   prop.painBoard.length -1 ){
+                           if( prop.painBoard[x+1][y] ==  changedValue ){
+                                prop.painBoard[x+1][y] = COLOR;
+                               list.add(new int[]{x+1,y});
+                               if(speed != 0){
+                                    try { Thread.sleep(speed); } catch (Exception ex) {}
+                                    repaint();
+                                }
+                            
+                           }
+                       }
+
+                       if(y > 0 ){
+                           if( prop.painBoard[x][y-1] ==  changedValue ){
+                                prop.painBoard[x][y-1] = COLOR;
+                               list.add(new int[]{x,y-1});
+                                if(speed != 0){
+                                    try { Thread.sleep(speed); } catch (Exception ex) {}
+                                    repaint();
+                                }
+                        
+                           }
+                       }
+
+
+                       if( y <  prop.painBoard[x].length -1){
+                           if( prop.painBoard[x][y+1] == changedValue){
+                                prop.painBoard[x][y+1] = COLOR;
+                               list.add(new int[]{x,y+1});
+                                if(speed != 0){
+                                    try { Thread.sleep(speed); } catch (Exception ex) {}
+                                    repaint();
+                                }
+                           }
+                       }      
+                    }
+                
+                   isRunning = false;
+          }else{
+            isRunning = false;
+        }
+             isRunning = false;
+      }catch(Exception e){
+       isRunning = false;
+          
+      }
+      
+      
+    }
     @Override
     public void keyTyped(KeyEvent e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -428,15 +668,17 @@ public class FloodFillAlgorithm extends javax.swing.JPanel implements KeyListene
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    public void changePanelColor(){
+        repaint();
+        if( COLOR >= 0 && COLOR <=10){
+            int rgb[] = prop.COLORS[COLOR];
+            int red = rgb[0], green = rgb[1] , blue = rgb[2];
+            jPanel2.setBackground(new Color(red,green,blue));
+        }
+    }
     @Override
     public void actionPerformed(ActionEvent e) {
         repaint();
-        if( COLOR >= 0 && COLOR <=10){
-              int rgb[] = prop.COLORS[COLOR];
-                int red = rgb[0], green = rgb[1] , blue = rgb[2];
-            jPanel2.setBackground(new Color(red,green,blue));
-        }
-        
         
         
     }
@@ -449,6 +691,8 @@ public class FloodFillAlgorithm extends javax.swing.JPanel implements KeyListene
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton14;
+    private javax.swing.JButton jButton15;
+    private javax.swing.JButton jButton16;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -462,5 +706,6 @@ public class FloodFillAlgorithm extends javax.swing.JPanel implements KeyListene
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSlider jSlider1;
+    private javax.swing.JSlider jSlider2;
     // End of variables declaration//GEN-END:variables
 }
