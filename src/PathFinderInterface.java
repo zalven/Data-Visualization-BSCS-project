@@ -32,6 +32,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -63,15 +64,15 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
 //        setFocusable(true);
 //        setFocusTraversalKeysEnabled(false);
             
-       int[] rgbs = settings.COLORS[0];
-       int reds = rgbs[0] ,greens = rgbs[1],blues = rgbs[2];
+        int[] rgbs = settings.COLORS[0];
+        int reds = rgbs[0] ,greens = rgbs[1],blues = rgbs[2];
         setBackground(new Color(reds,greens,blues));  
         settings.board =  new int[ settings.ROWS][settings.COLUMNS];
         position = null;
         target = null;
         points = null;
         running = false;
-        System.out.println("reset");
+       // System.out.println("reset");
        
        
        JLabel lab1 = new JLabel("RESET");
@@ -127,6 +128,214 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
          
         timer = new Timer((int)settings.DELAY,this);
         timer.start();
+        
+        
+        
+        if(running == false){
+        
+        
+        
+        
+        addMouseListener(new MouseAdapter(){
+                 public void mouseClicked(MouseEvent e) {
+                        // -4 =POINTS 
+                        // -3 = path 
+                        // -2 = target 
+                        // -1 = barrier 
+                        // -0 = empty space 
+                        // 1  = player
+                        // else all pathways
+                      int y = (int)((e.getY()) /25);
+                      int x = (int)(e.getX() /25 );
+
+                      // Reset
+                      if(( (x == 2 || x == 1) && y == 26  ) && running == false){
+                         settings.board =  new int[ settings.ROWS][settings.COLUMNS];
+
+                         position = null;
+                         target = null;
+                         points = null;
+                         //                     pick = -1;
+                      }
+                      //Erase 
+                      if((x == 4 || x == 5) && y == 26){
+
+                          pick = 0;
+                      }
+                      // Target 
+                      if((x == 7 || x == 8) && y == 26){
+
+                          pick = -2;
+                      }
+                      // point
+                        if((x == 10 || x == 11) && y == 26){
+                            pick = -4;
+                        }
+                        // PLayer 
+                        if((x == 13 || x == 14) && y == 26){
+                            pick = 1;
+
+                        }
+                     // Boader   
+                     if((x == 16 || x == 17) && y == 26){
+                            pick = -1;
+                        }
+
+                        if(pick == 1 && running == false){
+                        for(int i = 0 ; i < settings.board.length ; i++){
+                            for(int j = 0 ; j < settings.board[i].length ; j++){
+                                if(settings.board[i][j] == 1 &&(y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS)){
+                                    settings.board[i][j] = previous;
+                                }
+                            }
+                        }
+                        if(y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS){
+                            int arr[] ={(int)((e.getY()) /25),(int)(e.getX() /25 ) } ; 
+                            position = arr;
+                            previous = settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ];
+                            settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ] = 1; 
+
+                         }
+                    }
+
+                    if(pick == -4 && running == false){
+                        for(int i = 0 ; i < settings.board.length ; i++){
+                            for(int j = 0 ; j < settings.board[i].length ; j++){
+                                if(settings.board[i][j] == -4 &&(y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS)){
+                                    settings.board[i][j] = previous;
+                                }
+                            }
+                        }
+                        if(y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS){
+                            int arr[] ={(int)((e.getY()) /25),(int)(e.getX() /25 ) } ; 
+                            points = arr;
+                            previous = settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ];
+                            settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ] = -4; 
+                         }
+                    }
+
+
+                    if(pick == -2 && running == false){
+                        for(int i = 0 ; i < settings.board.length ; i++){
+                            for(int j = 0 ; j < settings.board[i].length ; j++){
+                                if(settings.board[i][j] == -2 &&  (y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS)){
+                                    settings.board[i][j] = previous;
+                                }
+                            }
+                        }
+                     if(y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS ){
+                         int arr[] ={(int)((e.getY()) /25),(int)(e.getX() /25 ) } ; 
+                            target = arr;
+                        previous = settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ];
+                        settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ] = -2; 
+
+
+                        }
+                    }
+
+                     if(pick == 0 || pick == -1 && running == false){
+                        if(y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS){
+                            int removes =   settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ]  ;
+                            settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ] = pick;  
+                            if(removes == -4)
+                                points = null;
+                            if(removes == 1)
+                                position = null;
+                            if(removes == -2)
+                                target = null;
+
+                    }}
+
+
+                  }
+
+             });
+            addMouseMotionListener(new MouseAdapter() {
+                @Override
+                public void  mouseMoved(MouseEvent e){
+                    objectY= ((e.getY()));
+                    objectX = (e.getX());
+
+                }
+                @Override
+                public void  mouseDragged(MouseEvent e) {
+                    int y = (int)((e.getY()) /25);
+                    int x = (int)(e.getX() /25 );
+                    objectY= ((e.getY()));
+                    objectX = (e.getX());
+                   if(pick == 0 || pick == -1 && running == false){
+                        if(y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS && running == false){
+                            int removes =   settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ]  ;
+                            settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ] = pick;  
+                            if(removes == -4)
+                                points = null;
+                            if(removes == 1)
+                                position = null;
+                            if(removes == -2)
+                                target = null;
+
+                    }}
+                    if(pick == -4 && running == false){
+                        for(int i = 0 ; i < settings.board.length ; i++){
+                            for(int j = 0 ; j < settings.board[i].length ; j++){
+                                if(settings.board[i][j] == -4 &&(y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS)){
+                                    settings.board[i][j] = previous;
+                                }
+                            }
+                        }
+                        if(y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS){
+                             int arr[] = {(int)((e.getY()) /25) ,(int)(e.getX() /25 ) };
+                            points = arr;
+                            previous = settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ];
+                            settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ] = -4; 
+                         }
+                    }
+                    if(pick == 1 && running == false){
+                        for(int i = 0 ; i < settings.board.length ; i++){
+                            for(int j = 0 ; j < settings.board[i].length ; j++){
+                                if(settings.board[i][j] == 1 &&(y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS)){
+                                    settings.board[i][j] = previous;
+                                }
+                            }
+                        }
+                        if(y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS){
+                             int arr[] = {(int)((e.getY()) /25) ,(int)(e.getX() /25 ) };
+                            position = arr;
+                            previous = settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ];
+                            settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ] = 1; 
+                         }
+                    }
+                    if(pick == -2 && running == false){
+                        for(int i = 0 ; i < settings.board.length ; i++){
+                            for(int j = 0 ; j < settings.board[i].length ; j++){
+                                if(settings.board[i][j] == -2 &&  (y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS)){
+                                    settings.board[i][j] = previous;
+                                }
+                            }
+                        }
+                     if(y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS){
+                        int arr[] = {(int)((e.getY()) /25) ,(int)(e.getX() /25 ) };
+                        target = arr;
+                        previous = settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ];
+                        settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ] = -2; 
+
+                        }
+                    }
+
+
+                }
+
+            });
+        
+        
+        
+        
+        
+        
+        }
+        
+        
+        
         
         
    
@@ -577,8 +786,9 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
                 if(settings.board[row][col] == 1) change=3;
                 if(settings.board[row][col] > 1) change=9;
                 if(settings.board[row][col] == -5) change=5;
-                int rgb[] = settings.COLORS[change];
                 
+                
+                int rgb[] = settings.COLORS[change];
                 
                 int red = rgb[0], green = rgb[1] , blue = rgb[2];
                 g.setColor(new Color(red,green,blue));
@@ -748,11 +958,12 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
     private void initComponents() {
 
         jButton7 = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jSlider1 = new javax.swing.JSlider();
         jLabel1 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
 
         setLayout(null);
 
@@ -765,12 +976,7 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
             }
         });
         add(jButton7);
-        jButton7.setBounds(10, 710, 190, 40);
-
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/t2.png"))); // NOI18N
-        jLabel3.setText("jLabel2");
-        add(jLabel3);
-        jLabel3.setBounds(0, 700, 1360, 60);
+        jButton7.setBounds(0, 710, 200, 40);
 
         jPanel1.setLayout(null);
 
@@ -801,6 +1007,23 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
 
         add(jPanel1);
         jPanel1.setBounds(810, 630, 530, 70);
+
+        jButton2.setBorderPainted(false);
+        jButton2.setContentAreaFilled(false);
+        jButton2.setDefaultCapable(false);
+        jButton2.setFocusPainted(false);
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        add(jButton2);
+        jButton2.setBounds(420, 710, 180, 40);
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/t2.png"))); // NOI18N
+        jLabel3.setText("jLabel2");
+        add(jLabel3);
+        jLabel3.setBounds(0, 700, 1360, 60);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
@@ -854,9 +1077,41 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
         speed = jSlider1.getValue();
     }//GEN-LAST:event_jSlider1MouseDragged
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        if(running == false){
+            removeAll();
+            removeAll();
+            updateUI();
+            timer.stop();
+            
+            settings.board =  new int[ settings.ROWS][settings.COLUMNS];
+            position = null;
+            target = null;
+            points = null;
+            running = false;
+            
+            
+            FloodFillAlgorithm panel = new FloodFillAlgorithm();
+            MainPanel main = new MainPanel();
+            panel.setVisible(true);
+             main.frame.getContentPane().removeAll();
+         
+            // refresh the panel.
+           
+           
+            
+            main.frame.add(panel);
+            main.frame.setVisible(true);
+            ImageIcon img = new ImageIcon("src\\DSicon.png");
+            main.frame.setIconImage(img.getImage());
+
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
@@ -907,199 +1162,10 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
                         // else all pathways
 
 
-                addMouseListener(new MouseAdapter(){
-                 public void mouseClicked(MouseEvent e) {
-                        // -4 =POINTS 
-                        // -3 = path 
-                        // -2 = target 
-                        // -1 = barrier 
-                        // -0 = empty space 
-                        // 1  = player
-                        // else all pathways
-                      int y = (int)((e.getY()) /25);
-                      int x = (int)(e.getX() /25 );
-
-                      // Reset
-                      if(( (x == 2 || x == 1) && y == 26  ) && running == false){
-                         settings.board =  new int[ settings.ROWS][settings.COLUMNS];
-
-                         position = null;
-                         target = null;
-                         points = null;
-                         //                     pick = -1;
-                      }
-                      //Erase 
-                      if((x == 4 || x == 5) && y == 26){
-
-                          pick = 0;
-                      }
-                      // Target 
-                      if((x == 7 || x == 8) && y == 26){
-
-                          pick = -2;
-                      }
-                      // point
-                        if((x == 10 || x == 11) && y == 26){
-                            pick = -4;
-                        }
-                        // PLayer 
-                        if((x == 13 || x == 14) && y == 26){
-                            pick = 1;
-
-                        }
-                     // Boader   
-                     if((x == 16 || x == 17) && y == 26){
-                            pick = -1;
-                        }
-
-                        if(pick == 1 && running == false){
-                        for(int i = 0 ; i < settings.board.length ; i++){
-                            for(int j = 0 ; j < settings.board[i].length ; j++){
-                                if(settings.board[i][j] == 1 &&(y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS)){
-                                    settings.board[i][j] = previous;
-                                }
-                            }
-                        }
-                        if(y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS){
-                            int arr[] ={(int)((e.getY()) /25),(int)(e.getX() /25 ) } ; 
-                            position = arr;
-                            previous = settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ];
-                            settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ] = 1; 
-
-                         }
-                    }
-
-                    if(pick == -4 && running == false){
-                        for(int i = 0 ; i < settings.board.length ; i++){
-                            for(int j = 0 ; j < settings.board[i].length ; j++){
-                                if(settings.board[i][j] == -4 &&(y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS)){
-                                    settings.board[i][j] = previous;
-                                }
-                            }
-                        }
-                        if(y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS){
-                            int arr[] ={(int)((e.getY()) /25),(int)(e.getX() /25 ) } ; 
-                            points = arr;
-                            previous = settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ];
-                            settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ] = -4; 
-                         }
-                    }
-
-
-                    if(pick == -2 && running == false){
-                        for(int i = 0 ; i < settings.board.length ; i++){
-                            for(int j = 0 ; j < settings.board[i].length ; j++){
-                                if(settings.board[i][j] == -2 &&  (y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS)){
-                                    settings.board[i][j] = previous;
-                                }
-                            }
-                        }
-                     if(y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS ){
-                         int arr[] ={(int)((e.getY()) /25),(int)(e.getX() /25 ) } ; 
-                            target = arr;
-                        previous = settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ];
-                        settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ] = -2; 
-
-
-                        }
-                    }
-
-                     if(pick == 0 || pick == -1 && running == false){
-                        if(y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS){
-                            int removes =   settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ]  ;
-                            settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ] = pick;  
-                            if(removes == -4)
-                                points = null;
-                            if(removes == 1)
-                                position = null;
-                            if(removes == -2)
-                                target = null;
-
-                    }}
-
-
-                  }
-
-             });
-            addMouseMotionListener(new MouseAdapter() {
-                @Override
-                public void  mouseMoved(MouseEvent e){
-                    objectY= ((e.getY()));
-                    objectX = (e.getX());
-
-                }
-                @Override
-                public void  mouseDragged(MouseEvent e) {
-                    int y = (int)((e.getY()) /25);
-                    int x = (int)(e.getX() /25 );
-                    objectY= ((e.getY()));
-                    objectX = (e.getX());
-                   if(pick == 0 || pick == -1 && running == false){
-                        if(y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS && running == false){
-                            int removes =   settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ]  ;
-                            settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ] = pick;  
-                            if(removes == -4)
-                                points = null;
-                            if(removes == 1)
-                                position = null;
-                            if(removes == -2)
-                                target = null;
-
-                    }}
-                    if(pick == -4 && running == false){
-                        for(int i = 0 ; i < settings.board.length ; i++){
-                            for(int j = 0 ; j < settings.board[i].length ; j++){
-                                if(settings.board[i][j] == -4 &&(y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS)){
-                                    settings.board[i][j] = previous;
-                                }
-                            }
-                        }
-                        if(y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS){
-                             int arr[] = {(int)((e.getY()) /25) ,(int)(e.getX() /25 ) };
-                            points = arr;
-                            previous = settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ];
-                            settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ] = -4; 
-                         }
-                    }
-                    if(pick == 1 && running == false){
-                        for(int i = 0 ; i < settings.board.length ; i++){
-                            for(int j = 0 ; j < settings.board[i].length ; j++){
-                                if(settings.board[i][j] == 1 &&(y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS)){
-                                    settings.board[i][j] = previous;
-                                }
-                            }
-                        }
-                        if(y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS){
-                             int arr[] = {(int)((e.getY()) /25) ,(int)(e.getX() /25 ) };
-                            position = arr;
-                            previous = settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ];
-                            settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ] = 1; 
-                         }
-                    }
-                    if(pick == -2 && running == false){
-                        for(int i = 0 ; i < settings.board.length ; i++){
-                            for(int j = 0 ; j < settings.board[i].length ; j++){
-                                if(settings.board[i][j] == -2 &&  (y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS)){
-                                    settings.board[i][j] = previous;
-                                }
-                            }
-                        }
-                     if(y>=0 && y< settings.ROWS && x>=0 && x< settings.COLUMNS){
-                        int arr[] = {(int)((e.getY()) /25) ,(int)(e.getX() /25 ) };
-                        target = arr;
-                        previous = settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ];
-                        settings.board[(int)((e.getY()) /25)][ (int)(e.getX() /25 )  ] = -2; 
-
-                        }
-                    }
-
-
-                }
-
-            });
+                
          }else{
            
-           System.out.println("hello -"+count++%10);
+          // System.out.println("hello -"+count++%10);
             jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/open_1.png"))); // NOI18N
        }
          

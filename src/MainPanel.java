@@ -83,6 +83,7 @@ public class MainPanel extends JPanel {
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jButton7 = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
 
         setNextFocusableComponent(this);
@@ -191,7 +192,18 @@ public class MainPanel extends JPanel {
             }
         });
         jPanel2.add(jButton7);
-        jButton7.setBounds(220, 0, 190, 40);
+        jButton7.setBounds(220, 0, 200, 40);
+
+        jButton8.setBorderPainted(false);
+        jButton8.setContentAreaFilled(false);
+        jButton8.setFocusPainted(false);
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jButton8);
+        jButton8.setBounds(420, 0, 190, 40);
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/t1.png"))); // NOI18N
         jLabel2.setText("jLabel2");
@@ -330,6 +342,27 @@ public class MainPanel extends JPanel {
      
     }//GEN-LAST:event_jButton7ActionPerformed
 
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        
+        if(running == false){
+         FloodFillAlgorithm panel = new  FloodFillAlgorithm();
+        // panel.setVisible(true);
+        
+            settings.board =  new int[ settings.ROWS][settings.COLUMNS];
+            frame.getContentPane().removeAll();
+         
+            // refresh the panel.
+           
+           
+            
+            frame.add(panel);
+            frame.setVisible(true);
+            ImageIcon img = new ImageIcon("src\\DSicon.png");
+            frame.setIconImage(img.getImage());
+            
+    }
+    }//GEN-LAST:event_jButton8ActionPerformed
+
     
     
     
@@ -340,7 +373,7 @@ public class MainPanel extends JPanel {
         
     private static  Properties settings = new Properties();
     private static Timer timer;
-    private static JFrame frame = new JFrame();
+    public static JFrame frame = new JFrame();
     private static int w=0,x=0,y=0,z=0,speed = 1;
     private static MainPanel n = new MainPanel();
     private static int pick = 0;
@@ -771,6 +804,7 @@ public class MainPanel extends JPanel {
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private static javax.swing.JPanel jPanel1;

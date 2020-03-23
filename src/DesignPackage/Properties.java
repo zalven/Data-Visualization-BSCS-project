@@ -4,14 +4,7 @@ package DesignPackage;
 
 public class Properties {
     
-        // -4 = CHECK POINTS 
-        // -3 = path 
-        // -2 = target 
-        // -1 = barrier 
-        // -0 = empty space 
-        // 1  = player
-        // else all pathways
-    
+   
     
     public static String     TITLE  =  "DATA STRUCTURE PROJECT"; // TITLE OF THE GAME
     public static int
@@ -23,8 +16,11 @@ public class Properties {
                             GAP =       2,          // gaps in squares
                             SIZE =      23,         // Size of squares 
                             DELAY =     0,          // Frames Per secons delays
-                            ArraySize = 200;        // ArraySize in sorting
-            
+                            ArraySize = 200,        // ArraySize in sorting
+                            paintWidth = 190,
+                            paintHeight = 115,
+                            paintSize = 5,
+                            paintGap = 1;
    public static int[][] 
            COLORS = {
                     /*[0]*/        {21, 32, 43},       // BACKGROUND 1     
@@ -48,6 +44,18 @@ public class Properties {
     /**
      *
      */
+   
+     public static int[][] painBoard = new int[paintWidth ][paintHeight]; 
+    
+        // -5 = path 2 
+        // -4 = CHECK POINTS 
+        // -3 = path 1 
+        // -2 = target 
+        // -1 = barrier 
+        // -0 = empty space 
+        //  1 = player
+        // else all pathways
+    
     public static  int[][] board =  {
                         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
