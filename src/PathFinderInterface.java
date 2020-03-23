@@ -32,6 +32,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -51,10 +52,12 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
     private  Thread thread = new Thread();
     private int speed = 50;
     private boolean running = false;  
+    private int count = 0;
     
     public PathFinderInterface() {
         initComponents();
-
+  
+//
 //        setLayout(null);
 //        addKeyListener(this);
 //        setFocusable(true);
@@ -780,7 +783,7 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
             }
         });
         jPanel1.add(jButton1);
-        jButton1.setBounds(50, 20, 130, 30);
+        jButton1.setBounds(20, 20, 160, 30);
 
         jSlider1.setMinimum(5);
         jSlider1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -1095,7 +1098,9 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
 
             });
          }else{
-           jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/open.png")));
+           
+           System.out.println("hello -"+count++%10);
+            jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/open_1.png"))); // NOI18N
        }
          
     } 

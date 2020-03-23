@@ -3,6 +3,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 /*
@@ -22,7 +23,8 @@ public class loadingForm extends javax.swing.JFrame {
      */
     public loadingForm() {
         initComponents();
-       
+       ImageIcon img = new ImageIcon("src\\DSicon.png");
+       setIconImage(img.getImage());
         Dimension dimemsion = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(dimemsion.width/2-getSize().width/2, dimemsion.height/2-getSize().height/2);
        
@@ -62,7 +64,7 @@ public class loadingForm extends javax.swing.JFrame {
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Gear-0.2s-44px.gif"))); // NOI18N
         jLabel4.setText("jLabel3");
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(310, 520, 50, 50);
+        jLabel4.setBounds(330, 30, 40, 70);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Loading.png"))); // NOI18N
         jLabel1.setText("jLabel1");
@@ -76,15 +78,15 @@ public class loadingForm extends javax.swing.JFrame {
         jPanel1.add(jLabel5);
         jLabel5.setBounds(-180, 270, 34, 14);
 
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/coders_2.png"))); // NOI18N
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/coderLoading.png"))); // NOI18N
         jLabel6.setText("jLabel6");
         jPanel1.add(jLabel6);
-        jLabel6.setBounds(4, -6, 190, 700);
+        jLabel6.setBounds(0, -10, 220, 700);
 
         getContentPane().add(jPanel1);
-        jPanel1.setBounds(670, 0, 200, 690);
+        jPanel1.setBounds(670, 0, 220, 690);
 
-        setBounds(0, 0, 856, 683);
+        setBounds(0, 0, 888, 683);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -95,7 +97,6 @@ public class loadingForm extends javax.swing.JFrame {
          load.setVisible(true);
          try{
              for(int i = 0 ; i <= 100 ; i++){
-                 
                  load.jLabel2.setText(i+" %");
                  if(i < 20){
                      Thread.sleep(170);

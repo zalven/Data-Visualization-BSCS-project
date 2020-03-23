@@ -30,6 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.accessibility.AccessibleRole;
 import javax.swing.Action;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -53,6 +54,7 @@ public class MainPanel extends JPanel {
     public MainPanel() {
         initComponents();
         
+      
        
 //        setFocusable(true); 
 //        requestFocus();
@@ -319,6 +321,8 @@ public class MainPanel extends JPanel {
             
             frame.add(panel);
             frame.setVisible(true);
+            ImageIcon img = new ImageIcon("src\\DSicon.png");
+            frame.setIconImage(img.getImage());
             
     }
 
@@ -379,6 +383,8 @@ public class MainPanel extends JPanel {
  
 
     public static void main(String[] args) throws Exception{
+        ImageIcon img = new ImageIcon("src\\DSicon.png");
+            frame.setIconImage(img.getImage());
         loadingForm form = new loadingForm();
          form.setVisible(false);
         form.dispose();
