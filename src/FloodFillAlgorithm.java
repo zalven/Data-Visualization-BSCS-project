@@ -200,8 +200,9 @@ public class FloodFillAlgorithm extends javax.swing.JPanel implements KeyListene
         jButton15 = new javax.swing.JButton();
         jButton16 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jSlider2 = new javax.swing.JSlider();
+        jButton17 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
 
         setLayout(null);
 
@@ -415,11 +416,6 @@ public class FloodFillAlgorithm extends javax.swing.JPanel implements KeyListene
         add(jPanel1);
         jPanel1.setBounds(1140, 0, 220, 690);
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/t3.png"))); // NOI18N
-        jLabel2.setText("jLabel2");
-        add(jLabel2);
-        jLabel2.setBounds(0, 710, 1360, 40);
-
         jSlider2.setMaximum(10);
         jSlider2.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
@@ -428,12 +424,28 @@ public class FloodFillAlgorithm extends javax.swing.JPanel implements KeyListene
         });
         add(jSlider2);
         jSlider2.setBounds(1140, 690, 220, 20);
+
+        jButton17.setBorderPainted(false);
+        jButton17.setContentAreaFilled(false);
+        jButton17.setFocusPainted(false);
+        jButton17.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton17ActionPerformed(evt);
+            }
+        });
+        add(jButton17);
+        jButton17.setBounds(800, 710, 180, 40);
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/t3.png"))); // NOI18N
+        jLabel2.setText("jLabel2");
+        add(jLabel2);
+        jLabel2.setBounds(0, 710, 1360, 40);
     }// </editor-fold>//GEN-END:initComponents
     
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
              if(isRunning == false){
              
-                 timer.stop();
+                timer.stop();
                 PathFinderInterface panel = new PathFinderInterface();
                 MainPanel main = new MainPanel();
                 for(int i = 0 ; i < prop.paintWidth ;i++)
@@ -443,12 +455,9 @@ public class FloodFillAlgorithm extends javax.swing.JPanel implements KeyListene
 
                 prop.board =  new int[ prop.ROWS][prop.COLUMNS];
 
-               main. frame.getContentPane().removeAll();
+                main. frame.getContentPane().removeAll();
 
                 // refresh the panel.
-
-
-
                  main.frame.add(panel);
                  main.frame.setVisible(true);
                  ImageIcon img = new ImageIcon("src\\DSicon.png");
@@ -570,6 +579,29 @@ public class FloodFillAlgorithm extends javax.swing.JPanel implements KeyListene
     private void jSlider2MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jSlider2MouseDragged
         speed = jSlider2.getValue();
     }//GEN-LAST:event_jSlider2MouseDragged
+
+    private void jButton17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton17ActionPerformed
+         if(isRunning == false){
+             SudokuPanel sudoku = new SudokuPanel();
+             MainPanel main = new MainPanel();
+            timer.stop();
+            for(int i = 0 ; i < prop.paintWidth ;i++)
+                for(int j = 0 ; j <prop.paintHeight ; j++)
+                    prop.painBoard[i][j] = 1;
+             
+             prop.board =  new int[ prop.ROWS][prop.COLUMNS];
+
+               main. frame.getContentPane().removeAll();
+
+                // refresh the panel.
+                 main.frame.add(sudoku);
+                 main.frame.setVisible(true);
+                 ImageIcon img = new ImageIcon("src\\DSicon.png");
+                 main.frame.setIconImage(img.getImage());
+              
+             
+         }
+    }//GEN-LAST:event_jButton17ActionPerformed
 
     
     private  int getValue[];
@@ -693,6 +725,7 @@ public class FloodFillAlgorithm extends javax.swing.JPanel implements KeyListene
     private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton15;
     private javax.swing.JButton jButton16;
+    private javax.swing.JButton jButton17;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;

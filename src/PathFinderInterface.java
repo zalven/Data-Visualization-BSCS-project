@@ -961,6 +961,7 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
         jSlider1 = new javax.swing.JSlider();
         jLabel1 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
 
         setLayout(null);
@@ -1016,7 +1017,18 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
             }
         });
         add(jButton2);
-        jButton2.setBounds(420, 710, 180, 40);
+        jButton2.setBounds(410, 710, 180, 40);
+
+        jButton3.setBorderPainted(false);
+        jButton3.setContentAreaFilled(false);
+        jButton3.setFocusPainted(false);
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        add(jButton3);
+        jButton3.setBounds(800, 710, 180, 40);
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/t2.png"))); // NOI18N
         jLabel3.setText("jLabel2");
@@ -1106,10 +1118,40 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+     if(running == false){
+            removeAll();
+            removeAll();
+            updateUI();
+            timer.stop();
+            
+            settings.board =  new int[ settings.ROWS][settings.COLUMNS];
+            position = null;
+            target = null;
+            points = null;
+            running = false;
+            
+            
+            SudokuPanel panel = new SudokuPanel();
+            MainPanel main = new MainPanel();
+            panel.setVisible(true);
+             main.frame.getContentPane().removeAll();
+         
+            // refresh the panel.
+           
+            main.frame.add(panel);
+            main.frame.setVisible(true);
+            ImageIcon img = new ImageIcon("src\\DSicon.png");
+            main.frame.setIconImage(img.getImage());
+
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;

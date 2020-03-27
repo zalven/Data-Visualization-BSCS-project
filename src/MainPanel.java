@@ -84,6 +84,7 @@ public class MainPanel extends JPanel {
         jPanel2 = new javax.swing.JPanel();
         jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
+        jButton9 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
 
         setNextFocusableComponent(this);
@@ -204,6 +205,17 @@ public class MainPanel extends JPanel {
         });
         jPanel2.add(jButton8);
         jButton8.setBounds(420, 0, 190, 40);
+
+        jButton9.setBorderPainted(false);
+        jButton9.setContentAreaFilled(false);
+        jButton9.setFocusPainted(false);
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jButton9);
+        jButton9.setBounds(810, 0, 170, 40);
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/t1.png"))); // NOI18N
         jLabel2.setText("jLabel2");
@@ -362,6 +374,26 @@ public class MainPanel extends JPanel {
             
     }
     }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+    if(running == false){
+            SudokuPanel  panel = new SudokuPanel();
+            // panel.setVisible(true);
+        
+            
+            settings.board =  new int[ settings.ROWS][settings.COLUMNS];
+            frame.getContentPane().removeAll();
+            // refresh the panel.
+           
+           
+            
+            frame.add(panel);
+            frame.setVisible(true);
+            ImageIcon img = new ImageIcon("src\\DSicon.png");
+            frame.setIconImage(img.getImage());
+            
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton9ActionPerformed
 
     
     
@@ -805,6 +837,7 @@ public class MainPanel extends JPanel {
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
+    private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private static javax.swing.JPanel jPanel1;
