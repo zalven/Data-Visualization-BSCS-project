@@ -1,17 +1,14 @@
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.util.concurrent.ThreadLocalRandom;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.Timer;
 
 
 
-import DesignPackage.DisplayClass;
-import DesignPackage.PathFind;
+
+
+
+
+
+
 import DesignPackage.Properties;
-import DesignPackage.SortingAlgorithms;
 import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JFrame;
@@ -20,21 +17,10 @@ import javax.swing.Timer;
 import java.util.concurrent.ThreadLocalRandom;
 
 import LinkedList.LinkedList;
-import java.awt.Dimension;
-import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusListener;
-import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.accessibility.AccessibleRole;
-import javax.swing.Action;
+
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
+
+
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -87,7 +73,10 @@ public class MainPanel extends JPanel {
         jButton9 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
 
-        setNextFocusableComponent(this);
+        setDoubleBuffered(false);
+        setEnabled(false);
+        setFocusable(false);
+        setRequestFocusEnabled(false);
         setVerifyInputWhenFocusTarget(false);
         setLayout(null);
 
@@ -386,18 +375,16 @@ public class MainPanel extends JPanel {
             // refresh the panel.
            
            
-            
+        
             frame.add(panel);
             frame.setVisible(true);
+            
             ImageIcon img = new ImageIcon("src\\DSicon.png");
             frame.setIconImage(img.getImage());
-            
+
         }        // TODO add your handling code here:
     }//GEN-LAST:event_jButton9ActionPerformed
 
-
-    
-        
     private static  Properties settings = new Properties();
     private static Timer timer;
     public static JFrame frame = new JFrame();

@@ -1120,9 +1120,7 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
      if(running == false){
-            removeAll();
-            removeAll();
-            updateUI();
+       
             timer.stop();
             
             settings.board =  new int[ settings.ROWS][settings.COLUMNS];
@@ -1134,8 +1132,9 @@ public class PathFinderInterface extends javax.swing.JPanel implements KeyListen
             
             SudokuPanel panel = new SudokuPanel();
             MainPanel main = new MainPanel();
-            panel.setVisible(true);
              main.frame.getContentPane().removeAll();
+            
+            
          
             // refresh the panel.
            
