@@ -395,12 +395,7 @@ public class MainPanel extends JPanel {
         }        // TODO add your handling code here:
     }//GEN-LAST:event_jButton9ActionPerformed
 
-    
-    
-    
-    
-        
-  
+
     
         
     private static  Properties settings = new Properties();

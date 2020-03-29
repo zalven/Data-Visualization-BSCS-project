@@ -20,7 +20,8 @@ public class Properties {
                             paintWidth = 190,
                             paintHeight = 115,
                             paintSize = 5,
-                            paintGap = 1;
+                            paintGap = 1,
+                            fontSize = 40;
    public static int[][] 
            COLORS = {
                     /*[0]*/        {21, 32, 43},       // BACKGROUND 1     
@@ -33,8 +34,11 @@ public class Properties {
                     /*[7]*/        {23, 191, 99},      // GREEN
                     /*[8]*/        {255, 255, 255},    // WHITE
                     /*[9]*/        {0,0,0},            // BLACK
-                    /*[10]*/       {27, 40, 50}        // BLACK Selection
-                
+                    /*[10]*/       {27, 40, 50},       // BLACK Selection
+                    /*[11]*/       {57, 70, 80} ,
+                    /*[12]*/       {20,30,38},
+                    /*[13]*/       {24,37,48},
+                    /*[14]*/       {32,50,66},
            };
    public static boolean 
                         running = false,        // initial Start
@@ -45,6 +49,18 @@ public class Properties {
      *
      */
    
+   public static char sudokuBoard[][] = {
+                    {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+                    {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+                    {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+                    {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+                    {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+                    {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+                    {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+                    {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+                    {'.', '.', '.', '.', '8', '.', '.', '7', '9'}
+                    };
+   
     public static int[][] painBoard = new int[paintWidth ][paintHeight]; 
 
         // -5 = path 2 
@@ -52,7 +68,7 @@ public class Properties {
         // -3 = path 1 
         // -2 = target 
         // -1 = barrier 
-        // -0 = empty space 
+        // -0 = empty space dsadasd
         //  1 = player
         // else all pathways
     
