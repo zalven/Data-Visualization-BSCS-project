@@ -17,11 +17,13 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import static java.lang.Thread.sleep;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -44,8 +46,7 @@ public class SudokuPanel extends JPanel  implements KeyListener,ActionListener{
     private int gaps=10;
     private  int xLoc = 0;
     private  int yLoc = 0;
-    private char[][] clone;
-    private char[][] orig,reset;
+    private char[][] orig,reset,blank,clone;
     private int speed = 1;
     private boolean isRunning = false;
     public SudokuPanel() {
@@ -60,12 +61,28 @@ public class SudokuPanel extends JPanel  implements KeyListener,ActionListener{
                 mouseEvents();
                 timer = new Timer(prop.DELAY,this);
                 timer.start();
+                
+                
+                
+                
+                
+                
+                blank = cloneArr( new char[][]{{'.','.','.','.','.','.','.','.','.'},
+                                        {'.','.','.','.','.','.','.','.','.'},
+                                        {'.','.','.','.','.','.','.','.','.'},
+                                        {'.','.','.','.','.','.','.','.','.'},
+                                        {'.','.','.','.','.','.','.','.','.'},
+                                        {'.','.','.','.','.','.','.','.','.'},
+                                        {'.','.','.','.','.','.','.','.','.'},
+                                        {'.','.','.','.','.','.','.','.','.'},
+                                        {'.','.','.','.','.','.','.','.','.'}});
                 clone = cloneArr(  prop.sudokuBoard );
                 orig = cloneArr(  prop.sudokuBoard );
                 reset = cloneArr(  prop.sudokuBoard );
                
                  
     }
+    
     public char[][] cloneArr(char arr[][]){
         char result[][] = new char[9][9];
         for(int i = 0 ; i <  9 ; i ++)
@@ -94,6 +111,7 @@ public class SudokuPanel extends JPanel  implements KeyListener,ActionListener{
                             if(board[x][y] != -4 && board[x][y] != -6)
                                pos = new int[]{x,y};
                         }
+                        requestFocusInWindow();
                     }
             });
         
@@ -112,6 +130,7 @@ public class SudokuPanel extends JPanel  implements KeyListener,ActionListener{
                          if(board[x][y] != -4 && board[x][y] != -6)
                             pos = new int[]{x,y};
                     }
+                     requestFocusInWindow();
                 }
           });
     }
@@ -223,11 +242,20 @@ public class SudokuPanel extends JPanel  implements KeyListener,ActionListener{
         jPanel1 = new javax.swing.JPanel();
         jButton5 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        jButton7 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
+        time = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        solved = new javax.swing.JLabel();
+        mili = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(21, 32, 43));
+        setBackground(new java.awt.Color(37, 51, 65));
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
         addKeyListener(new java.awt.event.KeyAdapter() {
@@ -299,6 +327,33 @@ public class SudokuPanel extends JPanel  implements KeyListener,ActionListener{
         jPanel1.add(jButton4);
         jButton4.setBounds(90, 150, 210, 50);
 
+        jButton6.setBorderPainted(false);
+        jButton6.setContentAreaFilled(false);
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton6);
+        jButton6.setBounds(80, 90, 180, 50);
+
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("START / STOP");
+        jPanel1.add(jLabel5);
+        jLabel5.setBounds(80, 330, 230, 14);
+
+        jButton7.setBorderPainted(false);
+        jButton7.setContentAreaFilled(false);
+        jButton7.setFocusPainted(false);
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton7);
+        jButton7.setBounds(80, 270, 220, 50);
+
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/rightsudoku.png"))); // NOI18N
         jLabel3.setText("jLabel3");
         jPanel1.add(jLabel3);
@@ -308,6 +363,41 @@ public class SudokuPanel extends JPanel  implements KeyListener,ActionListener{
         jPanel1.setBounds(960, 20, 390, 670);
 
         jPanel2.setLayout(null);
+
+        time.setFont(new java.awt.Font("Tahoma", 0, 26)); // NOI18N
+        time.setForeground(new java.awt.Color(255, 255, 255));
+        time.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        time.setText("00:00:00");
+        jPanel2.add(time);
+        time.setBounds(60, 260, 140, 50);
+
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("No . of solved puzzle : ");
+        jPanel2.add(jLabel6);
+        jLabel6.setBounds(0, 220, 240, 14);
+
+        solved.setForeground(new java.awt.Color(255, 255, 255));
+        solved.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        solved.setText("0");
+        jPanel2.add(solved);
+        solved.setBounds(0, 200, 240, 14);
+
+        mili.setForeground(new java.awt.Color(255, 255, 255));
+        mili.setText("000");
+        jPanel2.add(mili);
+        mili.setBounds(190, 280, 40, 14);
+
+        jTextArea1.setEditable(false);
+        jTextArea1.setBackground(new java.awt.Color(37, 51, 65));
+        jTextArea1.setColumns(20);
+        jTextArea1.setForeground(new java.awt.Color(255, 255, 255));
+        jTextArea1.setRows(5);
+        jTextArea1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jScrollPane1.setViewportView(jTextArea1);
+
+        jPanel2.add(jScrollPane1);
+        jScrollPane1.setBounds(0, 340, 230, 170);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LeftSudoku.png"))); // NOI18N
         jLabel1.setText("jLabel1");
@@ -346,7 +436,7 @@ public class SudokuPanel extends JPanel  implements KeyListener,ActionListener{
                 for(int col = split*3 ; col < split*3+3 ; col++){
                     
                     int change = 0;
-                    if( board[row][col] >= 0 ) change = 1;
+                    if( board[row][col] >= 0 ) change = 13;
                     if( board[row][col] == -1 ) change = 10;
                     if( board[row][col] == -2 ) change = 10;
                     if( board[row][col] == -3 ) change = 2;
@@ -386,7 +476,7 @@ public class SudokuPanel extends JPanel  implements KeyListener,ActionListener{
             for(int row =3 ; row < 6 ; row++){
                 for(int col = split*3; col < split*3+3 ; col++){
                      int change = 0;
-                    if( board[row][col] >= 0 ) change = 1;
+                    if( board[row][col] >= 0 ) change =13;
                     if( board[row][col] == -1 ) change = 10;
                     if( board[row][col] == -2 ) change = 10;
                     if( board[row][col] == -3 ) change = 2;
@@ -420,7 +510,7 @@ public class SudokuPanel extends JPanel  implements KeyListener,ActionListener{
             for(int row =6 ; row < 9 ; row++){
                 for(int col = split*3 ; col < split*3+3  ; col++){
                      int change = 0;
-                    if( board[row][col] >= 0 ) change = 1;
+                    if( board[row][col] >= 0 ) change = 13;
                     if( board[row][col] == -1 ) change = 10;
                     if( board[row][col] == -2 ) change =10;
                     if( board[row][col] == -3 ) change = 2;
@@ -462,11 +552,12 @@ public class SudokuPanel extends JPanel  implements KeyListener,ActionListener{
     }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
                 if(isRunning == false){
+                    resetsTiner();
                     removeAll();
                     removeAll();
                     updateUI();
                     timer.stop();
-                    prop.sudokuBoard = cloneArr(reset);
+                   
                     FloodFillAlgorithm panel = new FloodFillAlgorithm();
                     MainPanel main = new MainPanel();
                     for(int i = 0 ; i < prop.paintWidth ;i++)
@@ -476,6 +567,10 @@ public class SudokuPanel extends JPanel  implements KeyListener,ActionListener{
 
                     prop.board =  new int[ prop.ROWS][prop.COLUMNS];
 
+                    prop.sudokuBoard = cloneArr(blank);
+                    clone= cloneArr(blank);
+
+                    requestFocusInWindow();
                     main. frame.getContentPane().removeAll();
 
                     // refresh the panel.
@@ -491,7 +586,7 @@ public class SudokuPanel extends JPanel  implements KeyListener,ActionListener{
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
            if(isRunning == false){
-           
+                resetsTiner();
                 removeAll();
                 removeAll();
                 updateUI();
@@ -501,8 +596,11 @@ public class SudokuPanel extends JPanel  implements KeyListener,ActionListener{
                 timer.stop();
 
                 prop.board =  new int[ prop.ROWS][prop.COLUMNS];
-                prop.sudokuBoard = reset;
+               
+                prop.sudokuBoard = cloneArr(blank);
+                clone= cloneArr(blank );
 
+                requestFocusInWindow();
                 MainPanel panel = new MainPanel();
                 panel.setVisible(true);
 
@@ -518,7 +616,7 @@ public class SudokuPanel extends JPanel  implements KeyListener,ActionListener{
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
         if(isRunning == false){
-        
+            resetsTiner();
             PathFinderInterface panel = new PathFinderInterface();
             timer.stop();
             prop.sudokuBoard = reset;
@@ -531,7 +629,10 @@ public class SudokuPanel extends JPanel  implements KeyListener,ActionListener{
             prop.board =  new int[ prop.ROWS][prop.COLUMNS];
 
             main. frame.getContentPane().removeAll();
+            prop.sudokuBoard = cloneArr(blank);
+            clone= cloneArr(blank);
 
+            requestFocusInWindow();
             // refresh the panel.
             main.frame.add(panel);
             main.frame.setVisible(true);
@@ -567,7 +668,7 @@ public class SudokuPanel extends JPanel  implements KeyListener,ActionListener{
                             repaint();
                            _backTrack(prop.sudokuBoard);
                            repaint();
-                           prints(prop.sudokuBoard);
+                          // prints(prop.sudokuBoard);
                            isRunning =false;
 
                      }
@@ -578,6 +679,111 @@ public class SudokuPanel extends JPanel  implements KeyListener,ActionListener{
         isRunning = true;
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+       
+        if(isRunning == false){
+            int randomNum = ThreadLocalRandom.current().nextInt(0,  prop.sudokuProblems.length);
+            prop.sudokuBoard = cloneArr(prop.sudokuProblems[randomNum]) ;
+            clone = cloneArr(  prop.sudokuBoard );
+            orig = cloneArr(  prop.sudokuBoard );
+            reset = cloneArr(  prop.sudokuBoard );
+            requestFocusInWindow();
+        
+        }
+    }//GEN-LAST:event_jButton6ActionPerformed
+    private boolean running = false;
+    private int milliseconds = 0;
+    private int seconds = 0 ;
+    private int minutes = 0 ;
+    private int hours = 0 ;
+    private String oras =  "00:00:00";
+    private String previousTime  = "00:00:00";
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+      
+        if(isRunning == false){
+            solved.setText("0");;
+            if(running == false){
+                running = true;
+                 prop.sudokuBoard = cloneArr(blank);
+                 clone= cloneArr( blank );
+                timer();
+            }
+            else {
+
+                 resetsTiner();
+                 //timer();
+            }
+        
+        }
+        
+       
+                
+    }//GEN-LAST:event_jButton7ActionPerformed
+    private void resetsTiner(){
+    
+                prop.sudokuBoard = cloneArr(blank);
+                 clone= cloneArr( blank );
+                 milliseconds = 0;
+                 seconds = 0 ;
+                 minutes = 0 ;
+                 hours = 0 ;
+                 time.setText("00:00:00");
+                 running = false;
+                 //timer();
+    }
+    private void timer(){
+    
+         if(isRunning == false){
+            
+            int randomNum = ThreadLocalRandom.current().nextInt(0,  prop.sudokuProblems.length);
+            prop.sudokuBoard = cloneArr(prop.sudokuProblems[randomNum]) ;
+            clone = cloneArr(  prop.sudokuBoard );
+            orig = cloneArr(  prop.sudokuBoard );
+            reset = cloneArr(  prop.sudokuBoard );
+           
+            
+            requestFocusInWindow();
+            Thread t = new Thread(){
+               public void run(){
+                   for(;;)
+                   if(running == true){
+                       try{
+                           sleep(1);
+                           if(milliseconds > 1000){
+                               milliseconds = 0;
+                               seconds++;
+                           }
+                           if(seconds >60){
+                               milliseconds = 0;
+                               seconds = 0 ;
+                               minutes++;
+
+                           }if(minutes > 60){
+                               milliseconds = 0;
+                               seconds = 0 ;
+                               minutes = 0;
+                               hours++;
+                           }
+                          
+                           
+                           String timer = String.format("%02d",hours) +":"+String.format("%02d",minutes)+":"+String.format("%02d",seconds);
+                            mili.setText(milliseconds+"");
+                            time.setText(timer );
+                            oras = timer +"."+milliseconds;
+                            milliseconds ++;
+                       }catch(Exception e){
+
+                       }
+
+                   }else{
+                       break;
+                   }
+               }
+           };
+            t.start();
+        }
+                
+    }
     
     
     public boolean _backTrack(char[][] boards){
@@ -610,6 +816,7 @@ public class SudokuPanel extends JPanel  implements KeyListener,ActionListener{
                 
                 if(_backTrack(boards) == true){
                     
+                    
                     clone= cloneArr( prop.sudokuBoard );
                     board =decorConv(clone,row,col) ;
                     repaint();
@@ -621,7 +828,7 @@ public class SudokuPanel extends JPanel  implements KeyListener,ActionListener{
                 
                 boards[row][col] = '.';
                 try { Thread.sleep(speed); } catch (Exception ex) {}
-                 repaint();
+                repaint();
             }
             
         }
@@ -637,11 +844,20 @@ public class SudokuPanel extends JPanel  implements KeyListener,ActionListener{
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JLabel mili;
+    private javax.swing.JLabel solved;
+    private javax.swing.JLabel time;
     // End of variables declaration//GEN-END:variables
 
     
@@ -737,17 +953,7 @@ public class SudokuPanel extends JPanel  implements KeyListener,ActionListener{
        
     }
     
-    
-    
-    
-    
-    
-    
 
-    
-    
-    
-    
     @Override
     public void actionPerformed(ActionEvent e) {
        // timer.start();
@@ -755,8 +961,19 @@ public class SudokuPanel extends JPanel  implements KeyListener,ActionListener{
 //           System.out.println("Hey I won you piece of sht");
 //       }
 //       
-       if( sudokuIsWinner(sNumConvert (prop.sudokuBoard))   ){
-           System.out.println("Hey I won , It's working");
+       if( sudokuIsWinner(sNumConvert (prop.sudokuBoard))   && running == true ){
+            if(isRunning == false){
+                int randomNum = ThreadLocalRandom.current().nextInt(0,  prop.sudokuProblems.length);
+                prop.sudokuBoard = cloneArr(prop.sudokuProblems[randomNum]) ;
+                clone = cloneArr(  prop.sudokuBoard );
+                orig = cloneArr(  prop.sudokuBoard );
+                reset = cloneArr(  prop.sudokuBoard );
+                requestFocusInWindow();
+                solved.setText(Integer.parseInt(solved.getText() )+1+"");
+                jTextArea1.setText(solved.getText()+" - [ "+previousTime+" - "+oras+" ] \n"+jTextArea1.getText());
+                previousTime = oras;
+        
+            }
        }
       
        repaint();
